@@ -3,14 +3,15 @@
 // Add CPT
 // http://codex.wordpress.org/Post_Types
 function create_post_type() {
-  register_post_type( 'acme_product',
+  register_post_type( 'local fund',
     array(
       'labels' => array(
-        'name' => __( 'Products' ),
-        'singular_name' => __( 'Product' )
+        'name' => __( 'Local fund' ),
+        'singular_name' => __( 'Local fund' )
       ),
       'public' => true,
       'has_archive' => true,
+      'hierchical' => true
     )
   );
 }
