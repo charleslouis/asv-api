@@ -39,6 +39,7 @@ add_action( 'init', 'people_init' );
 
 
 function json_api_prepare_post( $post_response, $post, $context ) {
+  $post_response['tttttttttttttttttttttttttttttttttttttttttttttt'] = 'passssssssssssssssssssssssssssssssssssssss';
   if( get_fields($post['ID']) ){
     $acf_fields = get_fields($post['ID']);
     foreach ($acf_fields as $key => $value) {
