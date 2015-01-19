@@ -1,21 +1,47 @@
 <?php 
 
-// Add CPT
+// Add aé custom post type for LOCAL FUNDS
 // http://codex.wordpress.org/Post_Types
 function create_post_type() {
-  register_post_type( 'local fund',
+  register_post_type( 'local_fund',
     array(
       'labels' => array(
-        'name' => __( 'Local fund' ),
+        'name' => __( 'Local funds' ),
         'singular_name' => __( 'Local fund' )
       ),
       'public' => true,
       'has_archive' => true,
-      'hierchical' => true
+      'hierchical' => true,
+      'menu_position' => 2
     )
   );
+  register_post_type( 'team_member',
+    array(
+      'labels' => array(
+        'name' => __( 'Team members' ),
+        'singular_name' => __( 'Team member' )
+      ),
+      'public' => true,
+      'has_archive' => true,
+      'hierchical' => true,
+      'menu_position' => 2
+    )
+  );
+  register_post_type( 'participations',
+    array(
+      'labels' => array(
+        'name' => __( 'Participations' ),
+        'singular_name' => __( 'Participation' )
+      ),
+      'public' => true,
+      'has_archive' => true,
+      'hierchical' => true,
+      'menu_position' => 2
+    )
+  ); 
 }
 add_action( 'init', 'create_post_type' );
+
 
 // Add CTax
 // http://codex.wordpress.org/Taxonomies
@@ -35,7 +61,7 @@ function people_init() {
     )
   );
 }
-add_action( 'init', 'people_init' );
+// add_action( 'init', 'people_init' );
 
 
 
