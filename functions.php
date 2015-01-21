@@ -1,70 +1,6 @@
 <?php 
 
-// Add aé custom post type for LOCAL FUNDS
-// http://codex.wordpress.org/Post_Types
-function create_post_type() {
-  register_post_type( 'local_fund',
-    array(
-      'labels' => array(
-        'name' => __( 'Local funds' ),
-        'singular_name' => __( 'Local fund' )
-      ),
-      'public' => true,
-      'has_archive' => true,
-      'hierchical' => true,
-      'menu_position' => 20
-    )
-  );
-  register_post_type( 'team_member',
-    array(
-      'labels' => array(
-        'name' => __( 'Team members' ),
-        'singular_name' => __( 'Team member' )
-      ),
-      'public' => true,
-      'has_archive' => true,
-      'hierchical' => true,
-      'menu_position' => 2
-    )
-  );
-  register_post_type( 'participations',
-    array(
-      'labels' => array(
-        'name' => __( 'Participations' ),
-        'singular_name' => __( 'Participation' )
-      ),
-      'public' => true,
-      'has_archive' => true,
-      'hierchical' => true,
-      'menu_position' => 2
-    )
-  ); 
-}
-add_action( 'init', 'create_post_type' );
-
-
-// Add CTax
-// http://codex.wordpress.org/Taxonomies
-// define "people" as a taxonomy for attachments. He uses it to allow people to mark the names of people in pictures, and using that his site can display pictures of people under the '/person/name' URL.
-function people_init() {
-  // create a new taxonomy
-  register_taxonomy(
-    'people',
-    'post',
-    array(
-      'label' => __( 'People' ),
-      'rewrite' => array( 'slug' => 'person' ),
-      'capabilities' => array(
-        'assign_terms' => 'edit_guides',
-        'edit_terms' => 'publish_guides'
-      )
-    )
-  );
-}
-// add_action( 'init', 'people_init' );
-
-
-
+// Inject Advance Custom Fields into the API
 function json_api_prepare_post( $post_response, $post, $context ) {
   if( get_fields($post['ID']) ){
     $acf_fields = get_fields($post['ID']);
@@ -77,4 +13,21 @@ function json_api_prepare_post( $post_response, $post, $context ) {
 add_filter( 'json_prepare_post', 'json_api_prepare_post', 10, 3 );
 
 
+// Require Custom post types
 require_once('custom-post-types/office.php');
+require_once('custom-post-types/team-member.php');
+require_once('custom-post-types/participation.php');
+
+
+// Handle CORS
+add_action( 'init', 'handle_preflight' );
+function handle_preflight() {
+    header("Access-Control-Allow-Origin: " . get_http_origin());
+    header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
+    header("Access-Control-Allow-Credentials: true");
+
+    if ( 'OPTIONS' == $_SERVER['REQUEST_METHOD'] ) {
+        status_header(200);
+        exit();
+    }
+}
