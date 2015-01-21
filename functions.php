@@ -12,7 +12,7 @@ function create_post_type() {
       'public' => true,
       'has_archive' => true,
       'hierchical' => true,
-      'menu_position' => 2
+      'menu_position' => 20
     )
   );
   register_post_type( 'team_member',
@@ -75,3 +75,6 @@ function json_api_prepare_post( $post_response, $post, $context ) {
   }
 }
 add_filter( 'json_prepare_post', 'json_api_prepare_post', 10, 3 );
+
+
+require_once('custom-post-types/office.php');
