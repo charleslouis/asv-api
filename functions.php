@@ -99,9 +99,62 @@ function json_api_prepare_post( $post_response, $post, $context ) {
           //put it back, once enriched
           $value = $post_repeater;
         }
+
+
+        if ( null != $value[0]['post'] ) {        
+          // there are godd chances we are returning a post object repeater
+          // so let's get each posts own ACFs
+          
+          // temporary store $value
+          $post_repeater = $value;
+
+          // loop in the repeater
+          foreach ($post_repeater as $post_key => $post_value) {
+            
+            // Get the post and it's ID
+            $repeated_post = $value[$post_key]['post'];
+            $repeated_post_ID = $repeated_post->ID;
+
+            // Get repeated post own ACFs
+            $repeated_post = enrich_related_post_with_own_acf( $repeated_post_ID, $repeated_post );
+            $post_repeater[$post_key]['post'] = $repeated_post;
+          }
+
+          //put it back, once enriched
+          $value = $post_repeater;
+        }
+
       }
+
+
       ////////////////////////////////////////
       // END OF REPEATER of POST OBJECTS
+      ////////////////////////////////////////
+
+      ////////////////////////////////////////
+      // OFFICES : get le list of offices posts enriched with their own ACFs(gmap, adress)
+      ////////////////////////////////////////
+      if( $key === 'acf_offices_page' ){
+        // if so get main offices page ACF
+        $offices_acf = get_fields($value);
+        $offices_acf = $offices_acf['offices_ordner'];
+          // loop in the repeater
+          foreach ($offices_acf as $post_key => $post_value) {
+            
+            // Get the post and it's ID
+            $repeated_post = $offices_acf[$post_key]['post'];
+            $repeated_post_ID = $repeated_post->ID;
+
+            // Get repeated post own ACFs
+            $repeated_post = enrich_related_post_with_own_acf( $repeated_post_ID, $repeated_post );
+            $offices_acf[$post_key]['post'] = $repeated_post;
+          }
+
+          //put it back, once enriched
+          $value = $offices_acf;        
+      }
+      ////////////////////////////////////////
+      // END OF OFFICES
       ////////////////////////////////////////
 
       // Add this ACF untouched or enriched with Post Object ACFs if needed
