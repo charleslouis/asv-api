@@ -69,6 +69,12 @@ function json_api_prepare_post( $post_response, $post, $context ) {
 
       ////////////////////////////////////////
       // REPEATER of POST OBJECTS
+      // Works with a Post Object returned format
+      //
+      // 
+      //  
+      // TO_DO : 
+      // Make it work with a Post ID returned format
       ////////////////////////////////////////
       if( is_array($value) ){
         if ( null != $value[0]['post'] ) {        
