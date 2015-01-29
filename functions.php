@@ -9,11 +9,10 @@ function enrich_related_post_with_own_acf( $related_post_ID, $original_related_p
     // Get the related post own ACFs
     $related_post_acf_fields = get_fields($related_post_ID);
 
-    foreach ($related_post_acf_fields as $key_acf => $value_acf) {
-      
+    foreach ($related_post_acf_fields as $key => $value) {      
       // Prefix with ACF to avoid conflict with core wordpress
-      $key_acf = 'acf_' . $key_acf;
-      $related_post_acf_part[$key_acf] = $value_acf;
+      $key = 'acf_' . $key;
+      $related_post_acf_part[$key] = $value;
     }
 
     //then merge the core fields ($value)
@@ -26,6 +25,11 @@ function enrich_related_post_with_own_acf( $related_post_ID, $original_related_p
   // This is the original_related_post enriched with its own ACFs
   return $original_related_post;
 }
+
+
+
+
+
 
 // Inject Advance Custom Fields into the API
 function json_api_prepare_post( $post_response, $post, $context ) {
@@ -88,31 +92,7 @@ function json_api_prepare_post( $post_response, $post, $context ) {
           foreach ($post_repeater as $post_key => $post_value) {
             
             // Get the post and it's ID
-            $repeated_post = $value[$post_key]['post'];
-            $repeated_post_ID = $repeated_post->ID;
-
-            // Get repeated post own ACFs
-            $repeated_post = enrich_related_post_with_own_acf( $repeated_post_ID, $repeated_post );
-            $post_repeater[$post_key]['post'] = $repeated_post;
-          }
-
-          //put it back, once enriched
-          $value = $post_repeater;
-        }
-
-
-        if ( null != $value[0]['post'] ) {        
-          // there are godd chances we are returning a post object repeater
-          // so let's get each posts own ACFs
-          
-          // temporary store $value
-          $post_repeater = $value;
-
-          // loop in the repeater
-          foreach ($post_repeater as $post_key => $post_value) {
-            
-            // Get the post and it's ID
-            $repeated_post = $value[$post_key]['post'];
+            $repeated_post = $post_repeater[$post_key]['post'];
             $repeated_post_ID = $repeated_post->ID;
 
             // Get repeated post own ACFs
@@ -138,8 +118,9 @@ function json_api_prepare_post( $post_response, $post, $context ) {
         // if so get main offices page ACF
         $offices_acf = get_fields($value);
         $offices_acf = $offices_acf['offices_ordner'];
+        
           // loop in the repeater
-          foreach ($offices_acf as $post_key => $post_value) {
+          foreach ($offices_acf as $post_key => $value) {
             
             // Get the post and it's ID
             $repeated_post = $offices_acf[$post_key]['post'];
@@ -151,7 +132,7 @@ function json_api_prepare_post( $post_response, $post, $context ) {
           }
 
           //put it back, once enriched
-          $value = $offices_acf;        
+          $value = $offices_acf;
       }
       ////////////////////////////////////////
       // END OF OFFICES
