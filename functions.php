@@ -1,19 +1,5 @@
 <?php 
 
-// Require image custom sizes
-require_once('libs/images.php');
-
-// Require ACF API enrichment
-require_once('libs/acf-api.php');
-
-
-
-// Require Custom post types
-require_once('libs/custom-post-types/office.php');
-require_once('libs/custom-post-types/team-member.php');
-require_once('libs/custom-post-types/participation.php');
-
-
 // Handle CORS
 add_action( 'init', 'handle_preflight' );
 function handle_preflight() {
@@ -26,3 +12,16 @@ function handle_preflight() {
         exit();
     }
 }
+
+
+// Require Custom post types
+require_once('libs/custom-post-types/office.php');
+require_once('libs/custom-post-types/team-member.php');
+require_once('libs/custom-post-types/participation.php');
+
+// Require image custom sizes
+require_once('libs/images.php');
+
+// Require ACF API enrichment
+require_once('libs/acf-api.php');
+
