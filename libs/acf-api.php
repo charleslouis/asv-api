@@ -33,7 +33,14 @@ function enrich_related_post_with_own_acf( $related_post_ID, $original_related_p
 
 // Inject Advance Custom Fields into the API
 function json_api_prepare_post( $post_response, $post, $context ) {
-  
+
+
+  $tweeter_feed_params_page = get_page_by_path( 'twitter-feed-parameters' );
+
+  if ( $tweeter_feed_params_page->ID === $post['ID']) {
+    return;
+  }
+
   // Check if get_fields() exists and if there are ACFs in this post
   if( get_fields($post['ID'] ) ){
 
