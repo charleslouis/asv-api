@@ -35,10 +35,10 @@ function enrich_related_post_with_own_acf( $related_post_ID, $original_related_p
 function json_api_prepare_post( $post_response, $post, $context ) {
 
 
+  // we don't want to show twitter API credentials on the site
   $tweeter_feed_params_page = get_page_by_path( 'twitter-feed-parameters' );
-
   if ( $tweeter_feed_params_page->ID === $post['ID']) {
-    return;
+      return $post_response;
   }
 
   // Check if get_fields() exists and if there are ACFs in this post
