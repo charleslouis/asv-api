@@ -53,32 +53,52 @@ Template Name: Twitter Feed oAuth
 	      
 	    // make links link to URL
 	    // http://css-tricks.com/snippets/php/find-urls-in-text-make-links/
+	    // improved by @Charleloui as initial version replaced all urls with the same link
 	    if(preg_match($reg_exUrl, $tweet_text, $url)) {
+	    	preg_match_all($reg_exUrl, $tweet_text, $tweet_tewt_urls_out, PREG_PATTERN_ORDER);
 	 
-	       // make the urls hyper links
-	       $tweet_text = preg_replace($reg_exUrl, "<a href='{$url[0]}'>{$url[0]}</a> ", $tweet_text);
-	 
+			// 	$urls = $tweet->entities->urls;
+			$urls = $tweet_tewt_urls_out[0];
+			
+			foreach ($urls as $url) {
+			   	$tweet_text = str_replace($url, "<a href='{$url}' title='{$url}' target='_blank'>{$url}</a> ", $tweet_text);
+			}
 	    }
 	 
 	    if(preg_match($reg_exHash, $tweet_text, $hash)) {
-	 
-	       // make the hash tags hyper links    https://twitter.com/search?q=%23truth
-	       $tweet_text = preg_replace($reg_exHash, "<a href='https://twitter.com/search?q={$hash[0]}'>{$hash[0]}</a> ", $tweet_text);
+	 		
+	 		preg_match_all($reg_exHash, $tweet_text, $tweet_tewt_hashes_out, PREG_PATTERN_ORDER);
+
+			$hashes = $tweet_tewt_hashes_out[0];
+
+			foreach ($hashes as $hash) {
+	       		$tweet_text = str_replace($hash, "<a href='https://twitter.com/search?q={$hash}' target='_blank'>{$hash}</a> ", $tweet_text);
+			}
+	       	// make the hash tags hyper links    https://twitter.com/search?q=%23truth
 	        
-	       // swap out the # in the URL to make %23
-	       $tweet_text = str_replace("/search?q=#", "/search?q=%23", $tweet_text );
+	       	// swap out the # in the URL to make %23
+	       	$tweet_text = str_replace("/search?q=#", "/search?q=%23", $tweet_text );
 	 
 	    }
-	 
+
+
 	    if(preg_match($reg_exUser, $tweet_text, $user)) {
-	 
-	        $tweet_text = preg_replace("/@([a-z_0-9]+)/i", "<a href='http://twitter.com/$1'>$0</a>", $tweet_text);
- 		
+
+	 		preg_match_all($reg_exUser, $tweet_text, $tweet_tewt_users_out, PREG_PATTERN_ORDER);
+
+			$users = $tweet_tewt_users_out[0];
+
+			foreach ($users as $user) {
+	       		$tweet_text = str_replace($user, "<a href='http://twitter.com/{$user}' target='_blank'>{$user}</a> ", $tweet_text);
+			}
+
+	        // swap out the @ in the URL
+	        $tweet_text = str_replace("/@", "/", $tweet_text );
  		}
 
  		$tweet->text_html = $tweet_text;
  	}
 
-	// $tweet_feed['tewt_html'] = $tweet_feed;
+
 	echo json_encode($tweet_feed);
 ?>
